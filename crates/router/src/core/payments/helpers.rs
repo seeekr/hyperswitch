@@ -804,7 +804,7 @@ impl Vault {
         state: &AppState,
         txn_id: &str,
         card: &api::CCard,
-    ) -> RouterResult<String> {
+    ) -> RouterResult<()> {
         let card_detail = api::CardDetail {
             card_number: card.card_number.clone(),
             card_exp_month: card.card_exp_month.clone(),
@@ -816,7 +816,8 @@ impl Vault {
             .await
             .change_context(errors::ApiErrorResponse::InternalServerError)
             .attach_printable("Add Card Failed")?;
-        Ok(txn_id.to_string())
+        // Ok(txn_id.to_string())
+        Ok(())
     }
 }
 
@@ -830,31 +831,7 @@ impl Vault {
         state: &AppState,
         lookup_key: &str,
     ) -> RouterResult<Option<api::PaymentMethod>> {
-        let de_tokenize = cards::get_tokenized_data(state, lookup_key, true).await?;
-        let value1: api::TokenizedCardValue1 = de_tokenize
-            .value1
-            .parse_struct("TokenizedCardValue1")
-            .change_context(errors::ApiErrorResponse::InternalServerError)
-            .attach_printable("Error parsing TokenizedCardValue1")?;
-        let value2 = de_tokenize.value2;
-        let card_cvc = if value2.is_empty() {
-            //mandatory field in api contract (when querying from legacy locker we don't get cvv), cvv handling needs to done
-            "".to_string()
-        } else {
-            let tk_value2: api::TokenizedCardValue2 = value2
-                .parse_struct("TokenizedCardValue2")
-                .change_context(errors::ApiErrorResponse::InternalServerError)
-                .attach_printable("Error parsing TokenizedCardValue2")?;
-            tk_value2.card_security_code.unwrap_or_default()
-        };
-        let card = api::PaymentMethod::Card(api::CCard {
-            card_number: value1.card_number.into(),
-            card_exp_month: value1.exp_month.into(),
-            card_exp_year: value1.exp_year.into(),
-            card_holder_name: value1.name_on_card.unwrap_or_default().into(),
-            card_cvc: card_cvc.into(),
-        });
-        Ok(Some(card))
+        Ok(None)
     }
 
     #[instrument(skip_all)]
@@ -862,23 +839,9 @@ impl Vault {
         state: &AppState,
         txn_id: &str,
         card: &api::CCard,
-    ) -> RouterResult<String> {
-        let value1 = transformers::mk_card_value1(
-            card.card_number.peek().clone(),
-            card.card_exp_year.peek().clone(),
-            card.card_exp_month.peek().clone(),
-            Some(card.card_holder_name.peek().clone()),
-            None,
-            None,
-            None,
-        )
-        .change_context(errors::ApiErrorResponse::InternalServerError)
-        .attach_printable("Error getting Value1 for locker")?;
-        let value2 =
-            transformers::mk_card_value2(Some(card.card_cvc.peek().clone()), None, None, None)
-                .change_context(errors::ApiErrorResponse::InternalServerError)
-                .attach_printable("Error getting Value12 for locker")?;
-        cards::create_tokenize(state, value1, Some(value2), txn_id.to_string()).await
+    ) -> RouterResult<()> {
+        Ok(())
+
     }
 }
 
