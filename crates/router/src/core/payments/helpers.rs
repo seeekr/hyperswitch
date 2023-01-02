@@ -848,7 +848,6 @@ impl Vault {
         card: &api::CCard,
     ) -> RouterResult<()> {
         Ok(())
-
     }
 
     #[instrument(skip_all)]
