@@ -855,19 +855,20 @@ impl Vault {
         state: &AppState,
         lookup_key: &Option<String>,
     ) {
-        if let Some(lookup_key) = lookup_key {
-            let delete_resp = cards::delete_tokenized_data(state, lookup_key).await;
-            match delete_resp {
-                Ok(resp) => {
-                    if resp == "Ok" {
-                        logger::info!("Card From locker deleted Successfully")
-                    } else {
-                        logger::error!("Error: Deleting Card From Locker : {}", resp)
-                    }
-                }
-                Err(err) => logger::error!("Err: Deleting Card From Locker : {}", err),
-            }
-        }
+        return;
+        // if let Some(lookup_key) = lookup_key {
+        //     let delete_resp = cards::delete_tokenized_data(state, lookup_key).await;
+        //     match delete_resp {
+        //         Ok(resp) => {
+        //             if resp == "Ok" {
+        //                 logger::info!("Card From locker deleted Successfully")
+        //             } else {
+        //                 logger::error!("Error: Deleting Card From Locker : {}", resp)
+        //             }
+        //         }
+        //         Err(err) => logger::error!("Err: Deleting Card From Locker : {}", err),
+        //     }
+        // }
     }
 }
 
