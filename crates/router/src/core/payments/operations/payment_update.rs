@@ -21,7 +21,7 @@ use crate::{
         storage::{self, enums},
         transformers::ForeignInto,
     },
-    utils::{OptionExt, StringExt},
+    utils::OptionExt,
 };
 #[derive(Debug, Clone, Copy, PaymentOperation)]
 #[operation(ops = "all", flow = "authorize")]
@@ -66,11 +66,7 @@ impl<F: Send + Clone> GetTracker<F, PaymentData<F>, api::PaymentsRequest> for Pa
             })?;
 
         currency = match request.currency {
-            Some(ref cur) => cur.clone().parse_enum("currency").change_context(
-                errors::ApiErrorResponse::InvalidRequestData {
-                    message: "invalid currency".to_string(),
-                },
-            )?,
+            Some(cur) => cur.foreign_into(),
             None => payment_attempt.currency.get_required_value("currency")?,
         };
 
@@ -112,7 +108,6 @@ impl<F: Send + Clone> GetTracker<F, PaymentData<F>, api::PaymentsRequest> for Pa
         payment_intent.shipping_address_id = shipping_address.clone().map(|x| x.address_id);
         payment_intent.billing_address_id = billing_address.clone().map(|x| x.address_id);
 
-        let db = db as &dyn StorageInterface;
         let connector_response = db
             .find_connector_response_by_payment_id_merchant_id_attempt_id(
                 &payment_intent.payment_id,
@@ -165,6 +160,7 @@ impl<F: Send + Clone> GetTracker<F, PaymentData<F>, api::PaymentsRequest> for Pa
                     payment_attempt,
                     currency,
                     amount,
+                    email: request.email.clone(),
                     mandate_id,
                     token,
                     setup_mandate,
