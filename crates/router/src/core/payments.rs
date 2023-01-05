@@ -481,6 +481,7 @@ pub struct CustomerDetails {
     pub phone_country_code: Option<String>,
 }
 
+#[instrument(skip_all)]
 pub fn if_not_create_change_operation<'a, Op, F>(
     is_update: bool,
     status: storage_enums::IntentStatus,
@@ -510,6 +511,7 @@ where
     }
 }
 
+#[instrument(skip_all)]
 pub fn is_confirm<'a, F: Clone + Send, R, Op>(
     operation: &'a Op,
     confirm: Option<bool>,

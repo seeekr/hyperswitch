@@ -13,6 +13,7 @@ impl MandateNew {
 }
 
 impl Mandate {
+    #[instrument(skip(conn))]
     pub async fn find_by_merchant_id_mandate_id(
         conn: &PgPooledConn,
         merchant_id: &str,
@@ -27,6 +28,7 @@ impl Mandate {
         .await
     }
 
+    #[instrument(skip(conn))]
     pub async fn find_by_merchant_id_customer_id(
         conn: &PgPooledConn,
         merchant_id: &str,
@@ -42,6 +44,7 @@ impl Mandate {
         .await
     }
 
+    #[instrument(skip(conn))]
     pub async fn update_by_merchant_id_mandate_id(
         conn: &PgPooledConn,
         merchant_id: &str,

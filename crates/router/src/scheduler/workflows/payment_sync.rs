@@ -1,4 +1,4 @@
-use router_env::logger;
+use router_env::{logger, tracing, instrument};
 
 use super::{PaymentsSyncWorkflow, ProcessTrackerWorkflow};
 use crate::{
@@ -90,6 +90,7 @@ impl ProcessTrackerWorkflow for PaymentsSyncWorkflow {
     }
 }
 
+#[instrument(skip_all)]
 pub async fn get_sync_process_schedule_time(
     db: &dyn StorageInterface,
     connector: &str,

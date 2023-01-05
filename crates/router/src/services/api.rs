@@ -525,6 +525,7 @@ where
     error.current_context().error_response()
 }
 
+#[instrument(skip_all)]
 pub async fn authenticate_merchant<'a>(
     request: &HttpRequest,
     store: &dyn StorageInterface,

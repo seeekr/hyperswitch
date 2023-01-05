@@ -59,6 +59,7 @@ impl Address {
         .await
     }
 
+    #[instrument(skip(conn))]
     pub async fn update_by_merchant_id_customer_id(
         conn: &PgPooledConn,
         customer_id: &str,

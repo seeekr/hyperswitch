@@ -96,6 +96,7 @@ pub async fn construct_refund_router_data<'a, F>(
     Ok(router_data)
 }
 
+#[instrument(skip_all)]
 pub fn get_or_generate_id(
     key: &str,
     provided_id: &Option<String>,

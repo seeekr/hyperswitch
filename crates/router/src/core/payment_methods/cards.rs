@@ -551,6 +551,7 @@ pub async fn list_customer_payment_method(
     Ok(services::BachResponse::Json(response))
 }
 
+#[instrument(skip_all)]
 pub async fn get_lookup_key_from_locker(
     state: &routes::AppState,
     payment_token: &str,
@@ -576,6 +577,7 @@ pub struct BasiliskCardSupport;
 
 #[cfg(not(feature = "basilisk"))]
 impl BasiliskCardSupport {
+    #[instrument(skip_all)]
     async fn create_payment_method_data_in_locker(
         state: &routes::AppState,
         payment_token: &str,

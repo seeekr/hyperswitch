@@ -92,6 +92,7 @@ impl PaymentAttempt {
         .await
     }
 
+    #[instrument(skip(conn))]
     pub async fn find_last_successful_attempt_by_payment_id_merchant_id(
         conn: &PgPooledConn,
         payment_id: &str,
@@ -110,7 +111,7 @@ impl PaymentAttempt {
         .into_iter()
         .fold(
             Err(errors::DatabaseError::NotFound).into_report(),
-            |acc, cur| match acc {
+            |acc: Result<PaymentAttempt, error_stack::Report<errors::DatabaseError>>, cur| match acc {
                 Ok(value) if value.created_at > cur.created_at => Ok(value),
                 _ => Ok(cur),
             },

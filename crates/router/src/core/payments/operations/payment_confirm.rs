@@ -241,6 +241,7 @@ impl<F: Clone + Send> Domain<F, api::PaymentsRequest> for PaymentConfirm {
         helpers::add_domain_task_to_pt(self, state, payment_attempt).await
     }
 
+    #[instrument(skip_all)]
     async fn get_connector<'a>(
         &'a self,
         merchant_account: &storage::MerchantAccount,

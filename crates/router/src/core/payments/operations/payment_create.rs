@@ -305,6 +305,7 @@ impl<F: Clone + Send> Domain<F, api::PaymentsRequest> for PaymentCreate {
         Ok(())
     }
 
+    #[instrument(skip_all)]
     async fn get_connector<'a>(
         &'a self,
         merchant_account: &storage::MerchantAccount,

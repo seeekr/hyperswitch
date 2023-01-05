@@ -20,6 +20,7 @@ pub mod temp_card;
 use std::sync::Arc;
 
 use futures::lock::Mutex;
+use router_env::{tracing, instrument};
 
 use crate::{services::Store, types::storage};
 
@@ -111,6 +112,7 @@ impl StorageInterface for MockDb {
     }
 }
 
+#[instrument(skip_all)]
 pub async fn get_and_deserialize_key<T>(
     db: &dyn StorageInterface,
     key: &str,

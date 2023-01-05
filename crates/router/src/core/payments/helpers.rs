@@ -36,6 +36,7 @@ use crate::{
     },
 };
 
+#[instrument(skip_all)]
 pub async fn get_address_for_payment_request(
     db: &dyn StorageInterface,
     req_address: Option<&api::Address>,
@@ -88,6 +89,7 @@ pub async fn get_address_for_payment_request(
     })
 }
 
+#[instrument(skip_all)]
 pub async fn get_address_by_id(
     db: &dyn StorageInterface,
     address_id: Option<String>,
@@ -98,6 +100,7 @@ pub async fn get_address_by_id(
     }
 }
 
+#[instrument(skip_all)]
 pub async fn get_token_pm_type_mandate_details(
     state: &AppState,
     request: &api::PaymentsRequest,
@@ -133,6 +136,7 @@ pub async fn get_token_pm_type_mandate_details(
     }
 }
 
+#[instrument(skip_all)]
 pub async fn get_token_for_recurring_mandate(
     state: &AppState,
     req: &api::PaymentsRequest,
@@ -249,6 +253,7 @@ pub fn validate_request_amount_and_amount_to_capture(
     }
 }
 
+#[instrument(skip_all)]
 pub fn validate_mandate(
     req: impl Into<api::MandateValidationFields>,
 ) -> RouterResult<Option<api::MandateTxnType>> {
@@ -266,6 +271,7 @@ pub fn validate_mandate(
     }
 }
 
+#[instrument(skip_all)]
 fn validate_new_mandate_request(req: api::MandateValidationFields) -> RouterResult<()> {
     let confirm = req.confirm.get_required_value("confirm")?;
 
@@ -329,6 +335,8 @@ pub fn create_redirect_url(
         server.base_url, payment_attempt.payment_id, payment_attempt.merchant_id, connector_name
     )
 }
+
+#[instrument(skip_all)]
 fn validate_recurring_mandate(req: api::MandateValidationFields) -> RouterResult<()> {
     req.mandate_id.check_value_present("mandate_id")?;
 
@@ -351,6 +359,7 @@ fn validate_recurring_mandate(req: api::MandateValidationFields) -> RouterResult
     Ok(())
 }
 
+#[instrument(skip_all)]
 pub fn verify_mandate_details(
     request_amount: i64,
     request_currency: api_enums::Currency,
@@ -422,6 +431,7 @@ pub fn payment_intent_status_fsm(
     }
 }
 
+#[instrument(skip_all)]
 pub async fn add_domain_task_to_pt<Op>(
     operation: &Op,
     state: &AppState,
@@ -601,6 +611,7 @@ pub async fn get_customer_from_details(
     }
 }
 
+#[instrument(skip_all)]
 pub async fn get_connector_default(
     merchant_account: &storage::MerchantAccount,
     state: &AppState,
@@ -709,6 +720,7 @@ pub async fn create_customer_if_not_exist<'a, F: Clone, R>(
 }
 
 #[allow(clippy::too_many_arguments)]
+#[instrument(skip_all)]
 pub async fn make_pm_data<'a, F: Clone, R>(
     operation: BoxedOperation<'a, F, R>,
     state: &'a AppState,
@@ -1283,6 +1295,7 @@ pub fn generate_mandate(
 }
 
 // A function to manually authenticate the client secret
+#[instrument(skip_all)]
 pub(crate) fn authenticate_client_secret(
     request_client_secret: Option<&String>,
     payment_intent_client_secret: Option<&String>,
@@ -1295,6 +1308,7 @@ pub(crate) fn authenticate_client_secret(
     }
 }
 
+#[instrument(skip_all)]
 pub(crate) fn validate_pm_or_token_given(
     token: &Option<String>,
     pm_data: &Option<api::PaymentMethod>,

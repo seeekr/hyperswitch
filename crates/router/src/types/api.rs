@@ -11,6 +11,7 @@ use std::{fmt::Debug, str::FromStr};
 
 use bytes::Bytes;
 use error_stack::{report, IntoReport, ResultExt};
+use router_env::{tracing, instrument};
 
 pub use self::{admin::*, customers::*, payment_methods::*, payments::*, refunds::*, webhooks::*};
 use super::ErrorResponse;
@@ -116,6 +117,7 @@ impl ConnectorCallType {
 }
 
 impl ConnectorData {
+    #[instrument(skip_all)]
     pub fn get_connector_by_name(
         connectors: &Connectors,
         name: &str,

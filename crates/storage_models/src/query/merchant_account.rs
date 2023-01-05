@@ -40,6 +40,7 @@ impl MerchantAccount {
         }
     }
 
+    #[instrument(skip(conn))]
     pub async fn delete_by_merchant_id(
         conn: &PgPooledConn,
         merchant_id: &str,

@@ -11,6 +11,7 @@ pub use api_models::payments::{
 };
 use error_stack::{IntoReport, ResultExt};
 use masking::PeekInterface;
+use router_env::{tracing, instrument};
 use time::PrimitiveDateTime;
 
 use crate::{
@@ -83,6 +84,7 @@ pub(crate) trait PaymentIdTypeExt {
 }
 
 impl PaymentIdTypeExt for PaymentIdType {
+    #[instrument(skip_all)]
     fn get_payment_intent_id(&self) -> errors::CustomResult<String, errors::ValidationError> {
         match self {
             Self::PaymentIntentId(id) => Ok(id.clone()),
